@@ -5,21 +5,21 @@ use toml::from_str;
 
 #[derive(Debug, Deserialize)]
 pub struct Wallpaper {
-    pub resolution: Option<String>,
-    pub ratio: Option<String>,
+    pub resolution: String,
+    pub ratio: String,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct Categories {
-    pub general: Option<bool>,
-    pub anime: Option<bool>,
-    pub people: Option<bool>,
+    pub general: bool,
+    pub anime: bool,
+    pub people: bool,
 }
 
 #[derive(Debug, Deserialize)]
 pub struct Purity {
-    pub sfw: Option<bool>,
-    pub sketchy: Option<bool>,
+    pub sfw: bool,
+    pub sketchy: bool,
 }
 
 #[derive(Debug, Deserialize)]
@@ -30,9 +30,9 @@ pub struct Proxy {
 
 #[derive(Debug, Deserialize)]
 pub struct Settings {
-    pub wallpaper: Option<Wallpaper>,
-    pub categories: Option<Categories>,
-    pub purity: Option<Purity>,
+    pub wallpaper: Wallpaper,
+    pub categories: Categories,
+    pub purity: Purity,
     pub proxy: Option<Proxy>,
 }
 

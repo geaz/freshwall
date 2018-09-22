@@ -8,11 +8,19 @@ use std::env::temp_dir;
 use std::fs::File;
 
 use error::FreshwallError;
-use settings::{Proxy as ProxySettings, Settings};
+use settings::{Categories, Proxy as ProxySettings, Purity, Settings};
 
 pub fn set_random_wallpaper(settings: Settings) -> Result<(), FreshwallError> {
     let client = get_client(settings.proxy)?;
-    let response = client.get("https://alpha.wallhaven.cc/search?q=&categories=100&purity=100&atleast=3440x1440&ratios=21x9&sorting=random&order=desc").send()?;
+    let request_url = format!(
+        "https://alpha.wallhaven.cc/search?q=&categories={}&purity={}&atleast={}&ratios={}&sorting=random&order=desc", 
+        get_categories(settings.categories)?, 
+        get_purity(settings.purity)?,
+        settings.wallpaper.resolution,
+        settings.wallpaper.ratio
+    );
+    println!("{}", request_url);
+    let response = client.get(&request_url).send()?;
     let document = Document::from_read(response);
     for node in document.unwrap().find(Class("thumb")).take(1) {
         let wallpaper_url = format!(
@@ -34,7 +42,6 @@ pub fn set_random_wallpaper(settings: Settings) -> Result<(), FreshwallError> {
         println!("setting to: '{:?}'", fname);
         wallpaper::set_from_path(&fname).unwrap();
     }
-
     Ok(())
 }
 
@@ -49,4 +56,17 @@ fn get_client(proxy_settings: Option<ProxySettings>) -> Result<Client, Freshwall
         }
     }
     Ok(client_builder.build()?)
+}
+
+fn get_categories(category_settings: Categories) -> Result<String, FreshwallError> {
+    let general = if category_settings.general { "1" } else { "0" };
+    let anime = if category_settings.anime { "1" } else { "0" };
+    let people = if category_settings.people { "1" } else { "0" };
+    Ok(String::from(general) + anime + people)
+}
+
+fn get_purity(purity_settings: Purity) -> Result<String, FreshwallError> {
+    let sfw = if purity_settings.sfw { "1" } else { "0" };
+    let sketchy = if purity_settings.sketchy { "1" } else { "0" };
+    Ok(String::from(sfw) + sketchy + "0")
 }
