@@ -1,0 +1,16 @@
+[wallpaper]
+resolution = "3440x1440"
+ratio = "21:9"
+
+[categories]
+general = true
+anime = false
+people = false
+
+[purity]
+sfw = true
+sketchy = false
+
+#[proxy]
+#https = "PROT://IP:PORT"
+#http = "PRO://IP:PORT"
