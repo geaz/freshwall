@@ -5,11 +5,12 @@ authors = ["Gerrit 'Geaz' Gazic"]
 
 [dependencies]
 toml = "0.4"
-serde_derive = "^1.0.8"
-serde = "^1.0.8"
-reqwest = "*"
-select = "*"
+serde_derive = "1.0.8"
+serde = "1.0.8"
+reqwest = "0.9.1"
+select = "0.4.2"
 wallpaper = "2.0"
+systray = "0.3.0"
 
 [profile.release]
 opt-level = 3

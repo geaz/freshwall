@@ -5,6 +5,7 @@ use toml::from_str;
 
 #[derive(Debug, Deserialize)]
 pub struct Wallpaper {
+    pub refresh_on_start: bool,
     pub resolution: String,
     pub ratio: String,
 }

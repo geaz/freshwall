@@ -1,4 +1,5 @@
 [wallpaper]
+refresh_on_start = false
 resolution = "3440x1440"
 ratio = "21:9"
 

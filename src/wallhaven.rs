@@ -10,6 +10,13 @@ use std::fs::File;
 use error::FreshwallError;
 use settings::{Categories, Proxy as ProxySettings, Purity, Settings};
 
+pub fn check_start(settings: Settings) -> Result<(), FreshwallError> {
+    if settings.wallpaper.refresh_on_start {
+        set_random_wallpaper(settings)?;
+    }
+    Ok(())
+}
+
 pub fn set_random_wallpaper(settings: Settings) -> Result<(), FreshwallError> {
     let client = get_client(settings.proxy)?;
     let request_url = format!(
