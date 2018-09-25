@@ -1,3 +1,4 @@
+use log::SetLoggerError;
 use reqwest::Error as ReqwestError;
 use select::document::Document;
 use std::io::Error as IOError;
@@ -10,9 +11,9 @@ pub struct FreshwallError {
 }
 
 impl From<ReqwestError> for FreshwallError {
-    fn from(_error: ReqwestError) -> Self {
+    fn from(error: ReqwestError) -> Self {
         FreshwallError {
-            message: "Error".to_string(),
+            message: String::from("Reqwest Error: ") + &error.to_string(),
         }
     }
 }
@@ -20,15 +21,15 @@ impl From<ReqwestError> for FreshwallError {
 impl From<Document> for FreshwallError {
     fn from(_error: Document) -> Self {
         FreshwallError {
-            message: "Error".to_string(),
+            message: String::from("HTML Document Error"),
         }
     }
 }
 
 impl From<IOError> for FreshwallError {
-    fn from(_error: IOError) -> Self {
+    fn from(error: IOError) -> Self {
         FreshwallError {
-            message: "Error".to_string(),
+            message: String::from("IO Error: ") + &error.to_string(),
         }
     }
 }
@@ -36,7 +37,7 @@ impl From<IOError> for FreshwallError {
 impl From<TomlError> for FreshwallError {
     fn from(error: TomlError) -> Self {
         FreshwallError {
-            message: error.to_string() + &format!("{:?}", error.line_col()),
+            message: String::from("TOML Error: ") + &error.to_string(),
         }
     }
 }
@@ -44,7 +45,15 @@ impl From<TomlError> for FreshwallError {
 impl From<SystrayError> for FreshwallError {
     fn from(error: SystrayError) -> Self {
         FreshwallError {
-            message: error.to_string(),
+            message: String::from("Tray Error: ") + &error.to_string(),
+        }
+    }
+}
+
+impl From<SetLoggerError> for FreshwallError {
+    fn from(error: SetLoggerError) -> Self {
+        FreshwallError {
+            message: String::from("SetLogger Error: ") + &error.to_string(),
         }
     }
 }

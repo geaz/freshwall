@@ -11,6 +11,8 @@ reqwest = "0.9.1"
 select = "0.4.2"
 wallpaper = "2.0"
 systray = "0.3.0"
+log = "0.4.5"
+simplelog = "0.5.2"
 
 [profile.release]
 opt-level = 3

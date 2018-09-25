@@ -18,6 +18,7 @@ pub fn check_start(settings: Settings) -> Result<(), FreshwallError> {
 }
 
 pub fn set_random_wallpaper(settings: Settings) -> Result<(), FreshwallError> {
+    info!("Setting new wallpaper...");
     let client = get_client(settings.proxy)?;
     let request_url = format!(
         "https://alpha.wallhaven.cc/search?q=&categories={}&purity={}&atleast={}&ratios={}&sorting=random&order=desc", 
@@ -26,28 +27,28 @@ pub fn set_random_wallpaper(settings: Settings) -> Result<(), FreshwallError> {
         settings.wallpaper.resolution,
         settings.wallpaper.ratio
     );
-    println!("{}", request_url);
+
     let response = client.get(&request_url).send()?;
     let document = Document::from_read(response);
-    for node in document.unwrap().find(Class("thumb")).take(1) {
+    for node in document?.find(Class("thumb")).take(1) {
         let wallpaper_url = format!(
             "https://wallpapers.wallhaven.cc/wallpapers/full/wallhaven-{}.jpg",
             node.attr("data-wallpaper-id").unwrap()
         );
 
-        let mut dl_response = client.get(&wallpaper_url).send().unwrap();
+        info!("Loading wallpaper from: {}", wallpaper_url);
+        let mut dl_response = client.get(&wallpaper_url).send()?;
         let mut fname: String;
         let mut dest = {
             let filename = "wallpaper.jpg";
             let path = temp_dir().join(filename);
-            println!("will be located under: '{:?}'", path);
             fname = path.to_str().to_owned().unwrap().into();
-            File::create(path).unwrap()
+            File::create(path)?
         };
-        dl_response.copy_to(&mut dest).unwrap();
+        dl_response.copy_to(&mut dest)?;
         drop(dest);
-        println!("setting to: '{:?}'", fname);
         wallpaper::set_from_path(&fname).unwrap();
+        info!("Wallpaper set to: {}", fname);
     }
     Ok(())
 }
